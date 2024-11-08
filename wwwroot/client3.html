@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиент 3 - История Сообщений</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>
+        async function fetchHistory() {
+            const to = new Date();
+            const from = new Date(to.getTime() - 10 * 60 * 1000);
+
+            const query = `
+                query {
+                    messages(from: "${from.toISOString()}", to: "${to.toISOString()}") {
+                        text
+                        timestamp
+                        sequenceNumber
+                    }
+                }
+            `;
+
+            const response = await fetch('/graphql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+
+            const result = await response.json();
+            displayMessages(result.data.messages);
+        }
+
+        function displayMessages(messages) {
+            const messagesTable = document.getElementById("historyTable");
+            messagesTable.innerHTML = '';
+
+            messages.forEach(message => {
+                const row = messagesTable.insertRow();
+
+                const sequenceCell = row.insertCell(0);
+                sequenceCell.textContent = message.sequenceNumber;
+                sequenceCell.classList.add("sequence");
+
+                const textCell = row.insertCell(1);
+                textCell.textContent = message.text;
+                textCell.classList.add("message");
+
+                const timeCell = row.insertCell(2);
+                const localTime = new Date(message.timestamp).toLocaleString();
+                timeCell.textContent = localTime;
+                timeCell.classList.add("timestamp");
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>История Сообщений (Последние 10 Минут)</h1>
+    <p>порядковый номер был реализован также на серверной стороне так как мне показалось клиентская имплиминтация странной</p>
+    <button onclick="fetchHistory()">Показать Историю</button>
+    <table>
+        <thead>
+            <tr>
+                <th class="sequence">Порядковый Номер</th>
+                <th class="message">Сообщение</th>
+                <th class="timestamp">Время</th>
+            </tr>
+        </thead>
+        <tbody id="historyTable">
+        </tbody>
+    </table>
+</body>
+</html>

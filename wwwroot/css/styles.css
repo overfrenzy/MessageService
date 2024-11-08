@@ -1,0 +1,26 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.sequence {
+    width: 10%;
+}
+
+.message {
+    width: 60%;
+}
+
+.timestamp {
+    width: 30%;
+}

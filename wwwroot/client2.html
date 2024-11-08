@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиент 2 - Сообщения в Реальном Времени</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/messageHub")
+            .build();
+
+        connection.on("ReceiveMessage", (text, timestamp, sequenceNumber) => {
+            const messagesTable = document.getElementById("messagesTable");
+            const row = messagesTable.insertRow();
+            
+            const sequenceCell = row.insertCell(0);
+            sequenceCell.textContent = sequenceNumber;
+            sequenceCell.classList.add("sequence");
+
+            const textCell = row.insertCell(1);
+            textCell.textContent = text;
+            textCell.classList.add("message");
+
+            const timeCell = row.insertCell(2);
+            const localTime = new Date(timestamp).toLocaleString();
+            timeCell.textContent = localTime;
+            timeCell.classList.add("timestamp");
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+    </script>
+</head>
+<body>
+    <h1>Сообщения в Реальном Времени</h1>
+    <table>
+        <thead>
+            <tr>
+                <th class="sequence">Порядковый Номер</th>
+                <th class="message">Сообщение</th>
+                <th class="timestamp">Время</th>
+            </tr>
+        </thead>
+        <tbody id="messagesTable">
+        </tbody>
+    </table>
+</body>
+</html>

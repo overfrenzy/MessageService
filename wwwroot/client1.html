@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиент 1 - Отправить Сообщение</title>
+    <script>
+        async function sendMessage() {
+            const text = document.getElementById('messageText').value.trim();
+            if (!text) {
+                alert('Сообщение не может быть пустым');
+                return;
+            }
+
+            const query = `
+                mutation {
+                    addMessage(text: "${text}") {
+                        text
+                        timestamp
+                        sequenceNumber
+                    }
+                }
+            `;
+
+            const response = await fetch('/graphql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+            const result = await response.json();
+            console.log(result);
+        }
+    </script>
+</head>
+<body>
+    <h1>Отправить Сообщение</h1>
+    <label>Текст Сообщения:</label>
+    <input type="text" id="messageText" maxlength="128">
+    <button onclick="sendMessage()">Отправить</button>
+</body>
+</html>
