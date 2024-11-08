@@ -45,7 +45,7 @@ docker-compose up --build
 
 ## API-доступ
 
-- **GraphQL API**: Accessible at [http://localhost:8080/graphql](http://localhost:8080/graphql)
+- **GraphQL API**: Доступно на [http://localhost:8080/graphql](http://localhost:8080/graphql)
 
 ## Configuration
 
